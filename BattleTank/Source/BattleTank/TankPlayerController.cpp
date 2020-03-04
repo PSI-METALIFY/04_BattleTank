@@ -50,25 +50,29 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) cons
 
 	auto ScreenLocation = FVector2D(ViewportSizeX * CrossHairXLocation, ViewportSizeY * CrossHairYLocation);
 
-	FVector out_WorldOrigin;
-	FVector out_WorldDirection;
+	FVector LookDirection;
 
-	void 	DeprojectScreenToWorld
-	(
-		const FVector2D & ScreenPos,
-		const FIntRect & ViewRect,
-		const FMatrix & InvViewMatrix,
-		const FMatrix & InvProjMatrix,
-		FVector & out_WorldOrigin,
-		FVector & out_WorldDirection
-	);
-
-	UE_LOG(LogTemp, Warning, TEXT ("%s"), *out_WorldDirection.ToString())
-
+	if (GetlookDirection(ScreenLocation, LookDirection))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *LookDirection.ToString())
+	}
 
 	//UE_LOG(LogTemp, Warning, TEXT("Screenlocation = %s"), *ScreenLocation.ToString());
 	
 	// Line-trace along that look direction
 	return true;
+}
+
+bool ATankPlayerController::GetlookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
+{
+	FVector CameraWorldLocation;// is discarded
+
+	return DeprojectScreenPositionToWorld
+	(
+		ScreenLocation.X,
+		ScreenLocation.Y,
+		CameraWorldLocation,
+		LookDirection
+	);
 }
 
