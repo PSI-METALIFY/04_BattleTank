@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Engine/World.h"
+
 #include "TankPlayerController.h"
 
 
@@ -34,12 +34,9 @@ void ATankPlayerController::AimTowardsCrosshair()
 
 	FVector HitLocation; //Out parameter
 	if (GetSightRayHitLocation(HitLocation))// has "side-effect", will raytrace
-	{
+	{		
 		
-
-		UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *HitLocation.ToString());
-		
-	// TODO Tell controlled tank to aim at this point
+		GetControlledTank()->AimAt(HitLocation);
 	}
 }
 
