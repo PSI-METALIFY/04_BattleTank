@@ -10,5 +10,8 @@ public class BattleTankEditorTarget : TargetRules
 		Type = TargetType.Editor;
 
 		ExtraModuleNames.AddRange( new string[] { "BattleTank" } );
+
+		bUseUnityBuild = false;
+		bUsePCHFiles = false;
 	}
 }
