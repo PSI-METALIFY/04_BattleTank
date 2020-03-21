@@ -3,6 +3,8 @@
 
 #include "TankAIController.h" // ska vara första headern
 
+
+#include "Tank.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 
