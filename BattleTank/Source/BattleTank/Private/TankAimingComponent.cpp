@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 #include "TankAimingComponent.h" 
 
@@ -22,9 +23,15 @@ void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 	Barrel = BarrelToSet;
 }
 
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+	Turret = TurretToSet;
+}
+
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {	
 	if (!Barrel) { return; }
+
 	
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("ProjectileSocket"));
@@ -48,12 +55,14 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 
 	FString OwningTankName = GetOwner()->GetName();
 	auto BarrelLocation = Barrel->GetComponentLocation().ToString();
+
 	/*UE_LOG(LogTemp, Warning, TEXT(
 	"%s is aiming at : %s from : %s at %f at the direction of %s"), 
 	*OwningTankName, *HitLocation.ToString(), *BarrelLocation, LaunchSpeed, *AimDirection.ToString()
 	);*/
 	
 	MoveBarrelTowards(AimDirection);
+	MoveTurretTowards(AimDirection);
 
 	auto Time = GetWorld()->GetTimeSeconds();
 	UE_LOG(LogTemp, Warning, TEXT("%f: "), Time);
@@ -74,4 +83,13 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *DeltaRotator.ToString())
 
 	Barrel->Elevate(DeltaRotator.Pitch);
+}
+
+void UTankAimingComponent::MoveTurretTowards(FVector AimDirection)
+{
+	auto CurrentTurretRotation = Turret->GetForwardVector().Rotation();
+	auto CurrentAimRotation = AimDirection.Rotation();
+	auto DeltaRotator = CurrentAimRotation - CurrentTurretRotation;
+
+	Turret->RotateTurret(DeltaRotator.Yaw);
 }
