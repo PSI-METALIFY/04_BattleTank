@@ -13,18 +13,20 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true; // TODO to tick or not to tick?
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet) { return; }
 	Barrel = BarrelToSet;
 }
 
 void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 {
+	if (!TurretToSet) { return; }
 	Turret = TurretToSet;
 }
 
@@ -62,7 +64,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	);*/
 	
 	MoveBarrelTowards(AimDirection);
-	MoveTurretTowards(AimDirection);
+
 
 	auto Time = GetWorld()->GetTimeSeconds();
 	UE_LOG(LogTemp, Warning, TEXT("%f: "), Time);
@@ -77,19 +79,12 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
 	//Rotate turret, aiming barrel towards hitlocation
-	auto CurrentBarrelRotation = Barrel->GetForwardVector().Rotation();
-	auto CurrentAimRotation = AimDirection.Rotation();
-	auto DeltaRotator = CurrentAimRotation - CurrentBarrelRotation;
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *DeltaRotator.ToString())
-
-	Barrel->Elevate(DeltaRotator.Pitch);
-}
-
-void UTankAimingComponent::MoveTurretTowards(FVector AimDirection)
-{
 	auto CurrentTurretRotation = Turret->GetForwardVector().Rotation();
 	auto CurrentAimRotation = AimDirection.Rotation();
 	auto DeltaRotator = CurrentAimRotation - CurrentTurretRotation;
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *DeltaRotator.ToString())
 
+	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->RotateTurret(DeltaRotator.Yaw);
 }
+
