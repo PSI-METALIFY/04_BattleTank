@@ -65,9 +65,8 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	
 	MoveBarrelTowards(AimDirection);
 
-
+	//Literally just gets time
 	auto Time = GetWorld()->GetTimeSeconds();
-	UE_LOG(LogTemp, Warning, TEXT("%f: "), Time);
 	}
 	else
 	{
@@ -82,7 +81,6 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto CurrentTurretRotation = Turret->GetForwardVector().Rotation();
 	auto CurrentAimRotation = AimDirection.Rotation();
 	auto DeltaRotator = CurrentAimRotation - CurrentTurretRotation;
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *DeltaRotator.ToString())
 
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->RotateTurret(DeltaRotator.Yaw);
